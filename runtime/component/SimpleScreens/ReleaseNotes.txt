@@ -1,0 +1,84 @@
+
+Simple Screens - Reusable Screens, Forms, Sections, etc - Release Notes
+
+===========================================================================
+Release 1.0.2 - 26 Mar 2016
+===========================================================================
+
+Simple Screens 1.0.2 is a minor new feature and bug fix release.
+
+This release is based on Moqui Framework version 1.6.2, mantle-udm 1.0.1,
+and mantle-usl 1.0.1.
+
+This version only has minor new features like getProductList and
+getTaskList reusable transitions, findEntryUrl in accounting reports, a
+couple fixes and cleanups.
+
+===========================================================================
+Release 1.0.1 - 24 Jan 2016
+===========================================================================
+
+Simple Screens 1.0.1 is a minor new feature and bug fix release.
+
+This release is based on Moqui Framework version 1.6.1, mantle-udm 1.0.0,
+and mantle-usl 1.0.0.
+
+This release has only minor changes from the last, but has updates for the
+new Moqui Framework component management features and use of Bintray
+JCenter for jar files instead of local ones (used in automated tests).
+
+===========================================================================
+Release 1.0.0 - 17 Jan 2016
+===========================================================================
+
+Simple Screens 1.0.0 is the initial release of Simple Screens, a library of
+simple screens and screen components (forms, sections, transitions) to be
+included, extended, or generally reused in applications based on Moqui
+Framework and Mantle Business Artifacts.
+
+This release is based on Moqui Framework version 1.6.0 and Mantle Business
+Artifacts version 1.2.0.
+
+Initial screens include Accounting, Asset, Catalog, Facility, Order, Party,
+and Shipment screens plus templates for various reports and printed
+documents (XSL-FO for PDF rendering).
+
+The My Account app has 15 screens and 34 forms. Aside from My Account,
+SimpleScreens has 64 screens, 187 forms, and 17 templates. SimpleScreens
+has around 15k lines of artifacts in XML, FTL, and Groovy files.
+
+New Features
+
+- Added Accounting screens, originally in HiveMind
+  - Invoice
+  - Payment
+  - Financial Account
+  - GL Account
+  - Transaction
+  - Time Period
+  - Reports
+- Added some User and Vendor screens, originally in HiveMind
+  - Find and Edit User and Vendor
+  - Vendor Internal Org Accounting Setup
+- Added Asset screens, originally in PopCommerce
+- Added Catalog screens, originally in PopCommerce
+  - Product, Category, Feature, and FeatureGroup
+  - Product Search
+- Added Facility screens, originally in PopCommerce
+- Added Order screens, originally in PopCommerce
+- Added Party screens, based on Customer screens in PopCommerce
+- Added Shipment screens, originally in PopCommerce
+- Added MyAccount App, originally in Mantle
+  - Account and Contact Info
+  - Messages
+  - Calendar, Tasks, and Time Entries
+- Added template directory, originally in Mantle
+  - Some common party, accounting, etc forms and transitions
+  - Printed document and report templates
+    - Account: Fin Account Statements, Invoice, Payment Check/Detail
+    - Ledger: Balance Sheet, Cash Flow Statement, Financial Ratios,
+      Income Statement, Retained Earnings Statement
+    - Order: Printed Order
+    - Party: Badge
+    - Shipment: Shipment and Load Pick and Pack, Bill Of Lading
+    - Work: Production Run Pick

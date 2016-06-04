@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a 
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<entity-facade-xml type="seed">
+    <!-- Wiki Page -->
+    <dataDocuments dataDocumentId="HmWikiPage" indexName="hivemind" documentName="Wiki Page"
+            primaryEntityName="moqui.resource.wiki.WikiPage" documentTitle="${wikiSpaceId}/${pagePath?:''}"
+            manualDataServiceName="HiveMind.SearchServices.getWikiPageManualDocumentData">
+        <!-- NOTE: service purpose is to get wiki page contents from the file (resource) -->
+        <fields fieldPath="wikiPageId"/>
+        <fields fieldPath="wikiSpaceId"/>
+        <fields fieldPath="pagePath"/>
+        <fields fieldPath="space:description" fieldNameAlias="space"/>
+        <!-- the history fields are useful for update history and search by users who have updated a page, but also trigger indexing on page update -->
+        <fields fieldPath="histories:historySeqId"/>
+        <fields fieldPath="histories:changeDateTime"/>
+        <fields fieldPath="histories:userId"/>
+        <fields fieldPath="histories:user:username"/>
+        <fields fieldPath="histories:changeDateTime"/>
+        <links label="Wiki Page" linkUrl="/apps/hm/wiki/${wikiSpaceId}/${pagePath?:''}"/>
+    </dataDocuments>
+
+    <!-- Project -->
+    <org.moqui.impl.EntityServices.cloneDataDocument dataDocumentId="MantleProject" newDataDocumentId="HmProject"
+            newIndexName="hivemind" copyConditions="true"/>
+    <moqui.entity.document.DataDocumentLink dataDocumentId="HmProject" label="Edit Project"
+            linkUrl="/apps/hm/Project/ProjectSummary?workEffortId=${workEffortId}"/>
+
+    <!-- Task -->
+    <org.moqui.impl.EntityServices.cloneDataDocument dataDocumentId="MantleTask" newDataDocumentId="HmTask"
+            newIndexName="hivemind" copyConditions="true"/>
+    <moqui.entity.document.DataDocumentLink dataDocumentId="HmTask" label="Task Summary"
+            linkUrl="/apps/hm/Task/TaskSummary?workEffortId=${workEffortId}"/>
+
+    <!-- Request -->
+    <org.moqui.impl.EntityServices.cloneDataDocument dataDocumentId="MantleRequest" newDataDocumentId="HmRequest" newIndexName="hivemind"/>
+    <moqui.entity.document.DataDocumentLink dataDocumentId="HmRequest" label="Edit Request"
+            linkUrl="/apps/hm/Request/EditRequest?requestId=${requestId}"/>
+
+    <!-- ================ -->
+    <!-- Search Data Feed -->
+    <moqui.entity.feed.DataFeed dataFeedId="HiveMindSearch" dataFeedTypeEnumId="DTFDTP_RT_PUSH"
+            feedName="HiveMind Search" feedReceiveServiceName="HiveMind.SearchServices.indexAndNotify#HiveMindDocuments">
+        <documents dataDocumentId="HmWikiPage"/>
+        <documents dataDocumentId="HmProject"/>
+        <documents dataDocumentId="HmTask"/>
+        <documents dataDocumentId="HmRequest"/>
+    </moqui.entity.feed.DataFeed>
+
+    <!-- explicitly index the Data Feed documents since the trigger won't be in place until restart -->
+    <org.moqui.impl.EntityServices.indexDataFeedDocuments dataFeedId="HiveMindSearch"/>
+
+    <!-- EmailTemplates for Feed-driven Update Notifications -->
+    <moqui.basic.email.EmailTemplate emailTemplateId="HM_TASK_UPDATE" description="HiveMind Task Update Notification"
+            emailServerId="SYSTEM" bodyScreenLocation="component://HiveMind/screen/TaskUpdateNotification.xml"
+            webappName="webroot" fromAddress="" ccAddresses="" bccAddresses=""
+            subject="Task Updated: ${document._id} - ${document.name}" sendPartial="Y"/>
+    <moqui.basic.email.EmailTemplate emailTemplateId="HM_WIKI_PAGE_UPDATE" description="HiveMind WikiPage Update Notification"
+            emailServerId="SYSTEM" bodyScreenLocation="component://HiveMind/screen/WikiPageUpdateNotification.xml"
+            webappName="webroot" fromAddress="" ccAddresses="" bccAddresses=""
+            subject="Wiki Page Updated: ${document.wikiSpaceId}/${document.pagePath}" sendPartial="Y"/>
+</entity-facade-xml>

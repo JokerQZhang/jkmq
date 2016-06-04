@@ -1,0 +1,194 @@
+
+HiveMind Project Management and Service ERP Release Notes
+
+===========================================================================
+Release 1.1.5 - 26 Mar 2016
+===========================================================================
+
+HiveMind Project Management and Service ERP 1.1.5 is a minor new feature
+and bug fix release.
+
+This release is based on Moqui Framework version 1.6.2, mantle-udm 1.0.1,
+mantle-usl 1.0.1, and SimpleScreens 1.0.2.
+
+This release includes a number of improvements based on real-world use.
+
+New Features
+
+- Various cleanups, additional convenient links/buttons
+- Project Progress Report (in Admin app)
+- More consistent roles, especially using Assignee instead of Worker
+- Added Placeholder task purpose for tasks higher in an hierarchy
+- Various task UI improvements: autocomplete for parent task selection;
+  find by multiple purposes, statuses, assignees
+- HTML Wiki pages now supported, can choose page type on create
+- Now uses SimpleMDE markdown editor, much better UI than Pagedown
+- Added Hours Budget to project and tasks (for top-level tasks)
+- Changed Project Summary and Progress report to use hours budgets
+
+Bug Fixes
+
+- Fixed a number of issues with wiki page hierarchies and cleaner URLs
+- Fixed Admin User/EditTasks update (workEffortId parameter was missing)
+- Fixed Remaining Hours in EditTimeEntries
+
+===========================================================================
+Release 1.1.4 - 24 Jan 2016
+===========================================================================
+
+HiveMind Project Management and Service ERP 1.1.4 is a minor new feature
+and bug fix release.
+
+This release is based on Moqui Framework version 1.6.1, mantle-udm 1.0.0,
+mantle-usl 1.0.0, and SimpleScreens 1.0.1.
+
+This release has only minor changes from the last, but has updates for the
+new Moqui Framework component management features and use of Bintray
+JCenter for jar files instead of local ones (used in automated tests).
+
+===========================================================================
+Release 1.1.3 - 17 Jan 2016
+===========================================================================
+
+HiveMind 1.1.3 is a minor new feature and bug fix release.
+
+This release is based on Moqui Framework version 1.6.0 and Mantle Business
+Artifacts version 1.2.0 and SimpleScreens version 1.0.0.
+
+While there are a few new screens and improvements to the admin and
+PM apps the main changes in this release are quality related. There
+are now screen render tests, run on every git push though Travis CI, and
+there were various fixes and improvements done while writing these tests.
+
+Many screens (around 4500 lines) were moved to the SimpleScreens project
+for more generic reuse. The wiki data model and most of the services were
+moved to Moqui Framework (and those dependent on Mantle to Mantle). These
+changes help HiveMind focus on being an industry specific suite of
+applications while making it easier for other applications to reuse more
+generic functionality that was in HiveMind.
+
+The project management application currently has 31 screens and 54 forms.
+The admin application currently has 57 screens and 124 forms. HiveMind has
+around 7.7k lines of text, mostly in XML files (with a small number of
+lines in Groovy, FTL, MarkDown, and CWiki files).
+
+New Features
+
+- Added screen render tests, initially 87 renders
+- Added Travis CI configuration and setup automated builds
+- Various cleanups and fixes done while screen testing
+- Added financial reports based on newer report templates in SimpleScreens
+  and services in Mantle, improved existing reports; now includes Balance
+  Sheet, Cash Flow Statement, Income Statement, Retained Earnings, and
+  Financial Ratios/Metrics
+- The wiki entities and services have been moved to moqui and mantle and
+  are reused from their new homes
+- Various screens useful in other sorts of applications (and reused in
+  PopCommerce) have been moved to the new SimpleScreens project; initially
+  this includes all Accounting screens and specific Vendor and User screens
+
+===========================================================================
+Release 1.1.2 - 11 Sep 2015
+===========================================================================
+
+HiveMind 1.1.2 is a minor new feature and bug fix release.
+
+This release is based on Moqui Framework version 1.5.3 and Mantle Business
+Artifacts version 1.1.0 with updates as needed for these new versions.
+
+The project management application currently has 31 screens and 54 forms.
+The admin application currently has 57 screens and 121 forms. HiveMind has
+around 13k lines of text, mostly in XML files (with a small number of lines
+in FTL, MarkDown, and CWiki files).
+
+This release includes new PDF (XSL-FO) documents for payment check, payment
+detail, and financial account statement (in addition to the existing
+invoice PDF). There are various accounting improvements based on the
+significant accounting improvements in Mantle. These include improved
+invoice and transaction screens, expanded configuration, etc.
+
+===========================================================================
+Release 1.1.1 - 2 May 2015
+===========================================================================
+
+HiveMind PM 1.1.1 is a minor new feature and bug fix release.
+
+This release is based on Moqui Framework version 1.5.2 and Mantle Business
+Artifacts version 1.0.1.
+
+New Features:
+
+- Various changes for new features in Moqui Framework
+- More complete accounting (GL, invoices, payments, periods, etc) and
+  internal org setup screens
+
+===========================================================================
+Release 1.1.0 - 07 Mar 2015
+===========================================================================
+
+HiveMind PM 1.1.0 is a new feature and bug fix release.
+
+This release is based on Moqui Framework version 1.5.0 and Mantle Business
+Artifacts version 1.0.0.
+
+New Features:
+
+- Updates for the Metis Admin Template now in Moqui Framework
+- Changed search indexing to use service call feature now available in
+  Moqui Framework instead of using ServiceTrigger
+- Moved Admin screens to separate root screen (separate "app")
+- Added admin dashboard screen with process-ish links
+- Added icon images from flaticon.com
+- Added view-only Project Summary screen instead of edit screens for the
+  main PM app, the edit screens are still in the admin app
+- Added Pagedown editor for Markdown (.md) wiki pages, still supports cwiki
+  but now md is the default; converted demo pages from cwiki to md
+- Added threaded comments with CommunicationEvent records for wiki pages
+- Users in HiveMind PM can only see projects they are associated with, and
+  only tasks associated with their projects
+- Added child task display with id, name, purpose, status, and resolution
+  to the task summary screen
+- Added new child task form to task summary screen
+- The wiki page tree is now lazy loading and uses the XML Screen tree
+  element recently added to Moqui Framework
+- Improved accounting screens to better handle invoices, payments, and GL
+  transactions
+
+Bug Fixes:
+
+- Fixed issue on Milestone Summary showing milestone ID instead of task ID
+  for tasks in various states in the milestone, and ID in link to task and
+  hidden ID for updating the task association to the milestone
+- Fixed issue with wiki page display, resetting the baseLinkUrl so that JS
+  files and other URLs after the wiki content display are correct
+
+
+===========================================================================
+Release 1.0.0 - 20 Nov 2013
+===========================================================================
+
+HiveMind PM version 1.0.0 is the first official release. It is based on 
+Moqui Framework 1.3.2 and Mantle Business Artifacts 0.5.0.
+
+This initial version of HiveMind Project Manager includes:
+
+- Vendor, Internal Org, Client, Worker, and other User administration
+- Rate setup for client billing and vendor/worker payout by project,
+  worker, etc.
+- Project management
+- Milestone management and planning
+- Task management (hierarchical, associated with project and optionally
+  milestone)
+- Flexible task searching and all-in-one task summary
+- Request management, including creating tasks to address the request
+- Time entry by task
+- Expense entry by project
+- Invoices and payments to pay vendor/worker for time and expenses
+- Invoices and payments to bill clients and receive payment
+- Invoice PDF
+- GL posting for invoices and payments
+- Balance Sheet, Income Statement, and posted balance/summary reports
+- Wiki with attachments for requirements and designs, linked to tasks
+  and requests
+- Consolidated searching across projects, tasks, requests, and wiki
+- Simple email notifications for task, wiki, etc updates

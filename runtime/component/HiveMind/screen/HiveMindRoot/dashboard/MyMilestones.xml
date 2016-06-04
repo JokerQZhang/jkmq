@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a 
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.0.xsd"
+        default-menu-include="false" standalone="true">
+
+    <transition name="projectSummary"><default-response url="../../Project/ProjectSummary"/></transition>
+    <transition name="milestoneSummary"><default-response url="../../Project/MilestoneSummary"/></transition>
+
+    <actions>
+        <entity-find entity-name="WorkEffortAndRootByParty" list="myMilestoneList">
+            <date-filter/>
+            <econdition field-name="partyId" from="ec.user.userAccount.partyId"/>
+            <econdition field-name="rootWorkEffortTypeEnumId" value="WetProject"/>
+            <econdition field-name="rootStatusId" operator="not-in" value="WeClosed,WeCancelled"/>
+            <econdition field-name="workEffortTypeEnumId" value="WetMilestone"/>
+            <econdition field-name="statusId" operator="not-in" value="WeClosed,WeCancelled"/>
+            <select-field field-name="rootWorkEffortId"/><select-field field-name="workEffortId"/>
+            <select-field field-name="workEffortName"/><select-field field-name="statusId"/>
+            <order-by field-name="estimatedStartDate"/><order-by field-name="workEffortId"/>
+        </entity-find>
+    </actions>
+    <widgets>
+        <form-list name="MyMilestones" list="myMilestoneList">
+            <field name="rootWorkEffortId">
+                <default-field title="Project"><link url="projectSummary" text="${rootWorkEffortId?:'--'}">
+                    <parameter name="workEffortId" from="rootWorkEffortId"/></link></default-field>
+            </field>
+            <field name="workEffortId"><default-field title="Milestone">
+                <link url="milestoneSummary" text="${workEffortId}">
+                    <parameter name="milestoneWorkEffortId" from="workEffortId"/></link>
+            </default-field></field>
+            <field name="workEffortName"><default-field title="Name"><display/></default-field></field>
+            <field name="statusId"><default-field title="Status">
+                <display-entity entity-name="StatusItem" text="${description}"/>
+            </default-field></field>
+            <!-- TODO: add stats (# tasks by status, percent complete, etc) -->
+        </form-list>
+    </widgets>
+</screen>

@@ -1,0 +1,28 @@
+
+/* ========== Wiki Page Styles ========== */
+
+/* no longer used without the FTL tree template
+#wiki-page-list div a.button { border: 0; color: #000000; padding: 1px; margin: 1px; }
+#wiki-page-list div a.button:hover { text-decoration: underline; }
+*/
+
+/*
+#wiki-page-area { }
+
+#wiki-page-area h1 { margin: 16px 0 16px 0; border-bottom: #cccccc solid 1px; }
+#wiki-page-area h2 { margin: 8px 0 8px 0; border-bottom: #cccccc solid 1px; }
+#wiki-page-area h3 { margin: 4px 0 4px 0; text-decoration: underline; }
+*/
+
+/* ========== Task Summary Styles ========== */
+/*
+#task-summary-panel {  }
+#task-summary-panel-left {  }
+#task-summary-panel-center { padding-left: 8px; padding-right: 8px; }
+.bg-light #task-summary-panel-center { background: #EEE; }
+.bg-dark #task-summary-panel-center { background: #222; }
+*/
+#task-summary-panel-right { /*width: 240px;*/ }
+.task-comment { margin-bottom: 8px; }
+.task-comment-child { margin-left: 16px; border-left: #333333 dashed 1px; padding-left: 8px; }
+.bg-dark .task-comment-child { border-left: #EEE dashed 1px; }

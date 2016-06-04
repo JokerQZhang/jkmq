@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a 
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.0.xsd">
+    <widgets>
+        <render-mode><text type="html"><![CDATA[<html><body>]]></text></render-mode>
+        <container><label text="Task Updated: ${document._id} - ${document.name}" type="h2"/></container>
+        <section name="NameChange">
+            <condition><expression>document.name != originalDocument.name</expression></condition>
+            <widgets><container><label text="Task name changed from '${originalDocument.name}' to '${document.name}'"/></container></widgets>
+        </section>
+        <section name="StatusChange">
+            <condition><expression>document.status != originalDocument.status</expression></condition>
+            <widgets><container><label text="Status changed from '${originalDocument.status}' to '${document.status}'"/></container></widgets>
+        </section>
+        <!-- TODO: go through document and originalDocument elements to show what has been updated -->
+        <container><label text="New Task Document" type="h2"/></container>
+        <container><label text="${groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(document))}" type="pre"/></container>
+        <container><label text="Original Task Document" type="h2"/></container>
+        <container><label text="${groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(originalDocument))}" type="pre"/></container>
+        <render-mode><text type="html"><![CDATA[</body></html>]]></text></render-mode>
+    </widgets>
+</screen>

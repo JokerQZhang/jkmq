@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a 
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.0.xsd"
+        default-menu-include="false">
+
+    <!-- TODO: add ClientSummary (like dashboard... reuse dashboard forms?), Projects, Tasks, TimeEntries, Requests, Invoices -->
+
+    <transition name="findClient"><default-response url="."/></transition>
+    <transition name="createClient">
+        <service-call name="mantle.party.PartyServices.create#Organization" in-map="context"/>
+        <default-response url="../EditClient"/>
+        <error-response url="."/>
+    </transition>
+    <transition name="editClient"><default-response url="../EditClient"/></transition>
+
+    <pre-actions>
+        <set field="html_title" value="Find Client"/>
+    </pre-actions>
+    
+    <actions>
+        <entity-find entity-name="mantle.party.PartyDetailAndRole" list="clientList">
+            <search-form-inputs default-order-by="organizationName,firstName,lastName"/>
+            <econdition field-name="roleTypeId" value="CustomerBillTo"/>
+        </entity-find>
+    </actions>
+    <widgets>
+        <container>
+            <container-dialog id="AddClientDialog" button-text="Add Client">
+                <form-single name="CreateClient" transition="createClient">
+                    <field name="roleTypeId"><default-field><hidden default-value="CustomerBillTo"/></default-field></field>
+                    <field name="organizationName"><default-field title="Name"><text-line/></default-field></field>
+                    <field name="submitButton"><default-field title="Create Client"><submit/></default-field></field>
+                </form-single>
+            </container-dialog>
+        </container>
+
+        <form-list name="ClientList" list="clientList">
+            <field name="organizationName">
+                <header-field show-order-by="case-insensitive" title="Name"><text-find/></header-field>
+                <default-field><link url="editClient" text="${organizationName?:''} ${firstName?:''} ${lastName?:''}" link-type="anchor"/></default-field>
+            </field>
+            <field name="disabled">
+                <header-field title="Disabled?" show-order-by="case-insensitive"/>
+                <default-field><display text="${disabled?:'N'}"/></default-field>
+            </field>
+            <field name="searchButton">
+                <header-field title="Find"><submit/></header-field>
+                <default-field><display text=""/></default-field>
+            </field>
+        </form-list>
+    </widgets>
+</screen>

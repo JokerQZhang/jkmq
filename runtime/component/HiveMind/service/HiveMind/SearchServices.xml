@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a 
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.0.xsd">
+    <service verb="get" noun="WikiPageManualDocumentData" authenticate="anonymous-view">
+        <implements service="org.moqui.EntityServices.add#ManualDocumentData"/>
+        <actions>
+            <!-- primaryEntityValue is a WikiPage entity value, fields will be in the root document Map -->
+            <service-call name="org.moqui.impl.WikiServices.get#WikiPageInfo" out-map="wikiPageInfo"
+                    in-map="[wikiSpaceId:document.wikiSpaceId, pagePath:document.pagePath]"/>
+            <set field="baseLinkUrl" value="/apps/hm/wiki/${document.wikiSpaceId}"/>
+            <!-- TODO: add attachments too (for indexing)? -->
+            <set field="document.content" from="ec.resource.getLocationText(wikiPageInfo.pageLocation, false)"/>
+        </actions>
+    </service>
+    <service verb="indexAndNotify" noun="HiveMindDocuments" authenticate="anonymous-view">
+        <implements service="org.moqui.EntityServices.receive#DataFeed"/>
+        <actions>
+            <script><![CDATA[
+                import org.moqui.entity.EntityList
+                import org.moqui.entity.EntityValue
+                import org.slf4j.Logger
+                import org.slf4j.LoggerFactory
+                import org.moqui.context.ExecutionContext
+                ExecutionContext ec = context.ec
+                Logger logger = LoggerFactory.getLogger("HiveMind_receive_DataFeed")
+
+                // call the indexing service
+                Map indexResults = ec.service.sync().name("org.moqui.impl.EntityServices", "index", "DataDocuments")
+                        .parameters((Map) context).parameter("getOriginalDocuments", true).call()
+                if (indexResults == null) return
+
+                // send email notifications
+                List documentList = context.documentList
+                List originalDocumentList = (List) indexResults.originalDocumentList
+
+                for (int i = 0; i < documentList.size(); i++) {
+                    Map document = (Map) documentList.get(i)
+                    Map originalDocument = (Map) originalDocumentList.get(i)
+
+                    if (!originalDocument || document != originalDocument) {
+                        // send document updated notification
+
+                        if (document._type == "HmWikiPage") {
+                            // TODO: also check to see if fields shown in email are actually changed, otherwise don't send email
+
+                            // send WikiPage updated notification
+                            StringBuilder toAddresses = new StringBuilder()
+                            EntityList wikiSpaceUserList = ec.entity.find("moqui.resource.wiki.WikiSpaceUser")
+                                    .condition([wikiSpaceId:document.WikiPage.wikiSpaceId,  receiveNotifications:"Y"]).list()
+                            if (wikiSpaceUserList) for (EntityValue wikiSpaceUser in wikiSpaceUserList) {
+                                String emailAddress = ec.entity.find("moqui.security.UserAccount")
+                                        .condition("userId", wikiSpaceUser.userId).one()?.emailAddress
+                                if (emailAddress) { if (toAddresses) toAddresses.append(",");  toAddresses.append(emailAddress) }
+                            }
+                            EntityList wikiPageUserList = ec.entity.find("moqui.resource.wiki.WikiPageUser")
+                                    .condition([wikiPageId:document._id,  receiveNotifications:"Y"]).list()
+                            if (wikiPageUserList) for (EntityValue wikiPageUser in wikiPageUserList) {
+                                String emailAddress = ec.entity.find("moqui.security.UserAccount")
+                                        .condition("userId", wikiPageUser.userId).one()?.emailAddress
+                                if (emailAddress) { if (toAddresses) toAddresses.append(",");  toAddresses.append(emailAddress) }
+                            }
+
+                            Map bodyParameters = [document: document, originalDocument: originalDocument]
+
+                            if (toAddresses) {
+                                ec.service.async().name("org.moqui.impl.EmailServices.send#EmailTemplate")
+                                        .parameters([emailTemplateId: "HM_WIKI_PAGE_UPDATE",
+                                        toAddresses: toAddresses.toString(), bodyParameters: bodyParameters])
+                                        .call()
+                            }
+                        }
+
+                        if (document._type == "HmTask") {
+                            // TODO: also check to see if fields shown in email are actually changed, otherwise don't send email
+
+                            // send task updated notification
+                            StringBuilder toAddresses = new StringBuilder()
+                            EntityList workEffortPartyList = ec.entity.find("mantle.work.effort.WorkEffortParty")
+                                    .condition([workEffortId:document._id,  receiveNotifications:"Y"])
+                                    .conditionDate(null, null, null).list()
+                            if (workEffortPartyList) for (EntityValue workEffortParty in workEffortPartyList) {
+                                Map emailAddressMap = ec.service.sync().name("mantle.party.ContactServices.get#PrimaryEmailAddress")
+                                        .parameter("partyId", workEffortParty.partyId).call()
+                                if (emailAddressMap.emailAddress) {
+                                    if (toAddresses) toAddresses.append(",")
+                                    toAddresses.append(emailAddressMap.emailAddress)
+                                }
+                            }
+
+                            Map bodyParameters = [document: document, originalDocument: originalDocument]
+
+                            if (toAddresses) {
+                                ec.service.async().name("org.moqui.impl.EmailServices.send#EmailTemplate")
+                                        .parameters([emailTemplateId: "HM_TASK_UPDATE",
+                                        toAddresses: toAddresses.toString(), bodyParameters: bodyParameters])
+                                        .call()
+                            }
+                        }
+                    }
+                }
+                ]]></script>
+        </actions>
+    </service>
+</services>

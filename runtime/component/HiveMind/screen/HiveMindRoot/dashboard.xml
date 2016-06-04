@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a 
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.0.xsd"
+        default-menu-title="Dashboard" default-menu-index="1" menu-image="glyphicon glyphicon-dashboard" menu-image-type="icon">
+
+    <transition name="quickSearch"><default-response url="QuickSearch"/></transition>
+    <transition name="myWikiSpaces"><default-response url="MyWikiSpaces"/></transition>
+    <transition name="myTasks"><default-response url="MyTasks"/></transition>
+    <transition name="myRequests"><default-response url="MyRequests"/></transition>
+
+    <widgets>
+        <container-row>
+            <row-col md="2">
+                <section name="DashboardLeft"><widgets>
+                    <dynamic-container id="QuickSearchContainer" transition="quickSearch"/>
+
+                    <container>
+                        <link url="../Project" link-type="anchor"><image url="/hmstatic/images/project-business120.png" url-type="screen"/></link>
+                        <link text="Projects" url="../Project" link-type="anchor"/>
+                    </container>
+                    <container>
+                        <link url="../Task" link-type="anchor"><image url="/hmstatic/images/task-homework.png" url-type="screen"/></link>
+                        <link text="Tasks" url="../Task" link-type="anchor"/>
+                    </container>
+                    <container>
+                        <link url="../Request" link-type="anchor"><image url="/hmstatic/images/request-inspiration.png" url-type="screen"/></link>
+                        <link text="Requests" url="../Request" link-type="anchor"/>
+                    </container>
+
+                    <dynamic-container id="MyWikiSpacesContainer" transition="myWikiSpaces"/>
+                </widgets></section>
+            </row-col>
+            <row-col md="10">
+                <section name="DashboardCenter"><widgets>
+                    <dynamic-container id="MyTasksContainer" transition="myTasks"/>
+                    <dynamic-container id="MyRequestsContainer" transition="myRequests"/>
+                </widgets></section>
+            </row-col>
+        </container-row>
+    </widgets>
+</screen>

@@ -1,0 +1,113 @@
+
+Mantle Business Artifacts - Universal Service Library Release Notes
+
+===========================================================================
+Release 1.0.2 - TBD
+===========================================================================
+
+Mantle Universal Service Library 1.0.2 is a minor new feature and bug fix
+release.
+
+This release is based on Moqui Framework TODO and mantle-udm TODO.
+
+New Features
+
+- Financial TimePeriod close now updated beginning and ending balances on
+  all existing subsequent time periods
+- On AcctgTrans (GL) posting beginning and ending balances for future
+  existing time periods now updated
+- Improved locking (avoid deadlocks, etc) and cleanups in GL posting
+- Added reopen#FinancialTimePeriod service to open closed fiscal time
+  periods, opposite of the corresponding open service; requires the
+  FISCAL_REOPEN permission
+- When posting an applied payment or payment application the receivable or
+  payable GL account is determined based on the corresponding invoice so
+  they always match
+- The approve#Order service now requires the ORDER_APPROVE permission
+- In add#OrderPartToShipment only item quantities not yet associated with a
+  Shipment (not shipped quantities) are added
+- OrderDisplayInfo now gets quantity not shipped, billed by item and part
+- On Pack Shipment when invoice is created it is no longer put in
+  Finalized status so it may be modified before Finalize and GL posting
+- When Asset.quantityOnHandTotal goes below zero now does an automatic
+  physical inventory found to get it back to zero
+
+Bug Fixes
+
+- Fixed issue with fiscal and other TimePeriod create when db time zone
+  was very different from user time zone, now uses db time zone for date
+  calculations
+- Fixed issue where GL TX for Payment not reversed on Undeliver status
+  transition (PmntDelivered to PmntPromised)
+
+===========================================================================
+Release 1.0.1 - 26 Mar 2016
+===========================================================================
+
+Mantle Universal Service Library 1.0.1 is a minor new feature and bug fix
+release.
+
+This release is based on Moqui Framework 1.6.2 and mantle-udm 1.0.1.
+
+New Features
+
+- Improved tenant access product subscription handling along with improved
+  tenant provisioning services in moqui-framework
+- Various project management improvements (like more general use of
+  Assignee instead of Worker role, etc) and added services for a project
+  progress report
+- Various name templates updated for cleaner formatting (ID: instead of
+  ID in square brackets)
+- When creating a Shipment from/to party set based on origin/dest facility
+  if not specified
+
+Bug Fixes
+
+- Fixed issue with get#InventoryProjectedInfo service where field names in
+  sum aggregations were incorrect (missing sub-object names) for
+  reservations, issuances, and receipts fields; GitHub issue #6
+
+===========================================================================
+Release 1.0.0 - 24 Jan 2016
+===========================================================================
+
+Mantle Universal Service Library 1.0.0 is the first release as a component
+repository separate from the other components in Mantle Business Artifacts.
+
+This release is based on Moqui Framework 1.6.1 and mantle-udm 1.0.0.
+
+The initial code is from Mantle 1.2.0 and has only minor changes but has
+updates for the new Moqui Framework component management features and use
+of Bintray JCenter for jar files instead of local ones (used in automated
+tests).
+
+
+===========================================================================
+Long Term To Do List (some for mantle-usl, others for other components)
+===========================================================================
+
+- UBL 2.1 integrations
+  - https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=ubl
+  - integration/mantle-ubl component
+  - at least matching supported EDI messages
+- Braintree Payment Processor
+  - https://www.braintreepayments.com
+  - https://developers.braintreepayments.com/start/hello-server/java
+  - https://developers.braintreepayments.com/start/hello-client/javascript/v2
+  - payment/Braintree component
+- 2Checkout Payment Processor
+  - https://www.2checkout.com
+- Stripe Payment Processor
+  - https://stripe.com
+- Amazon Payments
+  - https://payments.amazon.com/home
+- Shopping Cart Integrations
+  - API2Cart
+    - https://www.api2cart.com
+    - https://www.api2cart.com/supported-platforms/
+    - http://docs.api2cart.com
+- GL REST API
+  - http://subledger.com
+  - https://api.subledger.com/v2/index.html
+- SaaS/Tenant REST API
+  - http://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference
